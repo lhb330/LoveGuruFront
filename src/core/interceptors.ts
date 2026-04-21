@@ -1,4 +1,4 @@
-import type { AxiosInstance, AxiosResponse } from 'axios'
+import type { AxiosInstance } from 'axios'
 import { showToast } from 'vant'
 import { tokenUtils } from '@/core/auth/token'
 import router from '@/router'

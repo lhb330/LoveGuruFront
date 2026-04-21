@@ -98,12 +98,11 @@
 import { ref, nextTick, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useChatStore } from '@/stores/chatStore'
-import { sendChatStream, getChatHistory, getNewConversationId, sendChatMessage } from '@/api/chat'
+import { getChatHistory, getNewConversationId, sendChatMessage } from '@/api/chat'
 import type { MessageItem } from '@/types/chat'
 import { showToast } from 'vant'
 import doubaoAvatar from '@/assets/images/doubao_avatar.png'
 import catAvatar from '@/assets/images/cat.jpeg'
-import { mockReplies } from './mockData'
 
 const route = useRoute()
 const store = useChatStore()
@@ -117,7 +116,7 @@ const hasInputText = ref(false)
 const conversationId = ref<string>()
 
 // 监听输入框文字变化
-watch(inputText, (newValue, oldValue) => {
+watch(inputText, (newValue) => {
   hasInputText.value = newValue.trim().length > 0
 })
 
@@ -139,43 +138,7 @@ const scrollToBottom = () => {
   })
 }
 
-let mockReplyIndex = 0
 
-// 模拟流式打字机效果
-const simulateStreamReply = (userMessage: string) => {
-  const reply = mockReplies[mockReplyIndex % mockReplies.length]
-  mockReplyIndex++
-  
-  replyText.value = ''
-  isTyping.value = true
-  
-  let charIndex = 0
-  const typeSpeed = 50
-  
-  const typeInterval = setInterval(() => {
-    if (charIndex < reply.length) {
-      replyText.value += reply[charIndex]
-      charIndex++
-      scrollToBottom()
-    } else {
-      clearInterval(typeInterval)
-      isTyping.value = false
-      
-      // 添加到消息列表
-      store.addMessage({
-        id: Date.now().toString(),
-        content: reply,
-        sender: 'other',
-        avatar: '',
-        create_time: new Date().toLocaleTimeString(),
-      })
-      replyText.value = ''
-      scrollToBottom()
-    }
-  }, typeSpeed)
-  inputText.value = ''
-  hasInputText.value = false
-}
 
 const onClickRight = async () => {
   try {
