@@ -8,7 +8,7 @@
     <template v-else>
       <van-nav-bar
         title="历史对话"
-        right-text="新对话"
+        right-text="开启新对话"
         @click-right="onClickRight"
       />
       <!-- 消息列表 -->

@@ -11,7 +11,7 @@
         left-text="返回" 
         left-arrow 
         @click-left="$router.back()" 
-        right-text="新对话"
+        right-text="开启新对话"
         @click-right="onClickRight"
         fixed 
         placeholder
@@ -268,9 +268,9 @@ const sendMessage = async () => {
 const loadChatHistory = async (convId: string) => {
   try {
     loading.value = true
-    conversationTitle.value = `对话 ${convId}`
     conversationId.value = convId
     const res = await getChatHistory(convId)
+    conversationTitle.value = `对话 ${res[0].content}`
     
     // 清空现有消息
     messageList.length = 0
