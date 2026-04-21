@@ -1,32 +1,44 @@
 <template>
   <div class="message-list-page">
-    <van-nav-bar
-      title="历史对话"
-      right-text="新对话"
-      @click-right="onClickRight"
-    />
-    <!-- 消息列表 -->
-    <div class="message-list">
-      <div
-        v-for="item in messageList"
-        :key="item.id"
-        class="message-item"
-        @click="handleItemClick(item)"
-      >
-        <!-- 左侧图标 -->
-        <div class="message-icon">
-          <van-icon name="chat-o" size="24" color="#999" />
-        </div>
-      
-        <!-- 消息内容 -->
-        <div class="message-content">
-          <div class="message-header">
-            <div class="message-title">{{ item.user_content }}</div>
-            <div class="message-time">{{ formatTime(item.create_time || '') }}</div>
+    <!-- 加载状态 -->
+    <div v-if="loading" class="loading-container">
+      <van-loading type="spinner" size="24px" vertical>加载中...</van-loading>
+    </div>
+    
+    <template v-else>
+      <van-nav-bar
+        title="历史对话"
+        right-text="新对话"
+        @click-right="onClickRight"
+      />
+      <!-- 消息列表 -->
+      <div class="message-list">
+        <div
+          v-for="item in messageList"
+          :key="item.id"
+          class="message-item"
+          @click="handleItemClick(item)"
+        >
+          <!-- 左侧图标 -->
+          <div class="message-icon">
+            <van-icon name="chat-o" size="24" color="#999" />
+          </div>
+        
+          <!-- 消息内容 -->
+          <div class="message-content">
+            <div class="message-header">
+              <div class="message-title">{{ item.user_content }}</div>
+              <div class="message-time">{{ formatTime(item.create_time || '') }}</div>
+            </div>
           </div>
         </div>
+        
+        <!-- 空状态 -->
+        <div v-if="messageList.length === 0" class="empty-state">
+          <van-empty description="暂无对话记录" />
+        </div>
       </div>
-    </div>
+    </template>
 
     <!-- 底部导航栏 -->
     <van-tabbar v-model="activeTab" active-color="#07c160" inactive-color="#c0c0c0">
@@ -108,6 +120,21 @@ const formatTime = (time: string) => {
 </script>
 
 <style scoped lang="scss">
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 50px); // 减去底部导航栏高度
+  background-color: #ededed;
+}
+
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 150px); // 减去导航栏和其他UI元素的高度
+}
+
 .message-list-page {
   height: 100vh;
   display: flex;

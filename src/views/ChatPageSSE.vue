@@ -1,17 +1,23 @@
 <template>
   <div class="chat-page">
-    <van-nav-bar 
-      :title="conversationTitle" 
-      left-text="返回" 
-      left-arrow 
-      @click-left="$router.back()" 
-      right-text="新对话"
-      @click-right="onClickRight"
-      fixed 
-      placeholder
-    />
+    <!-- 加载状态 -->
+    <div v-if="loading" class="loading-container">
+      <van-loading type="spinner" size="24px" vertical>加载中...</van-loading>
+    </div>
+    
+    <template v-else>
+      <van-nav-bar 
+        :title="conversationTitle" 
+        left-text="返回" 
+        left-arrow 
+        @click-left="$router.back()" 
+        right-text="新对话"
+        @click-right="onClickRight"
+        fixed 
+        placeholder
+      />
 
-    <div class="message-container" ref="messageContainerRef">
+      <div class="message-container" ref="messageContainerRef">
       <div
         v-for="msg in messageList"
         :key="msg.id"
@@ -111,6 +117,7 @@
         发送
       </van-button>
     </div>
+    </template>
   </div>
 </template>
 
@@ -162,6 +169,7 @@ const scrollToBottom = () => {
 
 const onClickRight = async () => {
   try {
+    loading.value = true
     showToast('正在创建新对话...')
     const newConv = await getNewConversationId()
     
@@ -177,6 +185,8 @@ const onClickRight = async () => {
   } catch (error: any) {
     console.error('创建新对话失败:', error)
     showToast(error?.message || '创建新对话失败')
+  } finally {
+    loading.value = false
   }
 }
 
@@ -301,6 +311,14 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 50px);
+  background-color: #f2f2f7;
+}
+
 .chat-page {
   height: 100vh;
   display: flex;
