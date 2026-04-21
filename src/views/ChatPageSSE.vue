@@ -49,6 +49,26 @@
         </template>
       </div>
 
+      <!-- AI思考中提示 -->
+      <div v-if="isTyping && !replyText" class="message-item other">
+        <van-image
+            round
+            fit="cover"
+            :src="doubaoAvatar"
+            width="36"
+            height="36"
+            class="avatar" 
+          />
+        <div class="bubble other thinking">
+          <span class="thinking-text">思考中</span>
+          <span class="thinking-dots">
+            <span class="dot">.</span>
+            <span class="dot">.</span>
+            <span class="dot">.</span>
+          </span>
+        </div>
+      </div>
+
       <!-- 正在输入的AI回复 -->
       <div v-if="replyText" class="message-item other">
         <van-image
@@ -422,5 +442,42 @@ onMounted(() => {
 
 .send-btn:active {
   opacity: 0.8;
+}
+
+/* 思考中动画 */
+.thinking {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.thinking-text {
+  color: #999;
+  font-style: italic;
+}
+
+.thinking-dots {
+  display: inline-flex;
+}
+
+.dot {
+  animation: thinking-blink 1.4s infinite;
+  color: #999;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes thinking-blink {
+  0%, 20% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
 }
 </style>
